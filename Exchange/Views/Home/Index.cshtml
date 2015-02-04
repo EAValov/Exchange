@@ -1,8 +1,144 @@
-﻿@model IEnumerable<Exchange.Models.BuyOrder>
-
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Scripts {
+    <script type="text/javascript">
+        //validation
+        $('form').each(function () {
+            $(this).validate({
+                rules: {
+                    Price: {
+                        required: true,
+                        number: true
+                    },
+                    Quantity: {
+                        required: true,
+                        number: true
+                    }
+                }
+                });
+            });
+            //refresh all tables after submitting a form
+            function RefreshAll() {
+                $('table').bootstrapTable('refresh', { silent: true });
+                $(this).closest('form').find("input[type=text], textarea").val("");
+            }
+    </script>
+}
 
+<div class="row">
+    <div class="col-xs-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">Sell</div>
+            <div class="panel-body">
 
+                @using (Ajax.BeginForm("", "", null, new AjaxOptions()
+            {
+                Url = "api/Order/PostSellOrder",
+                OnSuccess = "RefreshAll"
+            }, new { id = "PostSellOrder", name = "PostSellOrder" }))
+                {
+
+                    <div class="form-group">
+                        <label class="control-label">Price</label>
+                        @Html.TextBox("Price", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Quantity</label>
+                        @Html.TextBox("Quantity", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Commentary</label>
+                        @Html.TextArea("Commentary", null, new { @class = "form-control" })
+                    </div>
+
+                    <button type="submit" class="btn btn-default">Create</button>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">Buy</div>
+            <div class="panel-body">
+
+                @using (Ajax.BeginForm("", "", null, new AjaxOptions()
+            {
+                Url = "api/Order/PostBuyOrder",
+                OnSuccess = "RefreshAll"
+            }, new { id = "PostBuyOrder", name = "PostBuyOrder" }))
+                {
+                    <div class="form-group">
+                        <label class="control-label">Price</label>
+                        @Html.TextBox("Price", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Quantity</label>
+                        @Html.TextBox("Quantity", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Commentary</label>
+                        @Html.TextArea("Commentary", null, new { @class = "form-control" })
+                    </div>
+                    <button type="submit" class="btn btn-default">Create</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">Sell Orders</div>
+            <div class="panel-body">
+                <table data-toggle="table" data-url="/api/order/GetSellOrders" data-height="200">
+                    <thead>
+                        <tr>
+                            <th data-field="Price" data-align="right" data-sortable="true">Price</th>
+                            <th data-field="Quantity" data-align="center" data-sortable="true">Quantity</th>
+                            <th data-field="Commentary" data-sortable="true">Commentary</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">Buy Orders</div>
+            <div class="panel-body">
+                <table data-toggle="table" data-url="/api/order/GetBuyOrders" data-height="200">
+                    <thead>
+                        <tr>
+                            <th data-field="Price" data-align="right" data-sortable="true">Price</th>
+                            <th data-field="Quantity" data-align="center" data-sortable="true">Quantity</th>
+                            <th data-field="Commentary" data-sortable="true">Commentary</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-info">
+        <div class="panel-heading">Completed Orders</div>
+        <div class="panel-body">
+            <table data-toggle="table" data-url="/api/order/GetCompletedOrders" data-height="700">
+                <thead>
+                    <tr>
+                        <th data-field="CompletedAt" data-sortable="true">Completed At</th>
+                        <th data-field="SellOrderDate" data-sortable="true">Sell Order Date</th>
+                        <th data-field="BuyOrderDate" data-sortable="true">Buy Order Date</th>
+                        <th data-field="Price" data-sortable="true">Price</th>
+                        <th data-field="Quantity" data-sortable="true">Quantity</th>
+                        <th data-field="SellComment" data-sortable="true">Sell Commentary</th>
+                        <th data-field="BuyComment" data-sortable="true">Buy Commentary</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
