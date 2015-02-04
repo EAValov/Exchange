@@ -20,11 +20,11 @@ namespace Exchange.Controllers
 
         public IEnumerable<BuyOrder> GetBuyOrders()
         {
-            return repository.BuyOrders;
+            return repository.BuyOrders.Where(j=>j.Quantity > 0);
         }
         public IEnumerable<SellOrder> GetSellOrders()
         {
-            return repository.SellOrders;
+            return repository.SellOrders.Where(j => j.Quantity > 0);
         }
         public IEnumerable<CompletedOrder> GetCompletedOrders()
         {
